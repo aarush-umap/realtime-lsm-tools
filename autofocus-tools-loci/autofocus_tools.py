@@ -15,6 +15,7 @@ of the first derivative that is larger than a threshold θ"
     
     image: a 2D grayscale image with shape (H,W)
     threshold: a value that each gradient must be greater than to be included in the sum
+    debug: dictates whether to display debugging print statements or not
     """
     
     H, W = image.shape 
@@ -23,8 +24,12 @@ of the first derivative that is larger than a threshold θ"
         image: torch.Tensor = torch.from_numpy(image)
    
     # thresh = torch.nn.Threshold(threshold=threshold, value=0)
-    values_x: torch.Tensor = torch.abs(image[0:H-1, :] - image[1:, :])
-    values_y: torch.Tensor = torch.abs(image[:, 0:W-1] - image[:, 1: ])
+    # values_x: torch.Tensor = torch.abs(image[0:H-1, :] - image[1:, :])
+    # values_y: torch.Tensor = torch.abs(image[:, 0:W-1] - image[:, 1: ])
+    
+    values_x: torch.Tensor = torch.abs(image - np.roll(image, 1, 0))
+    values_y: torch.Tensor = torch.abs(image - np.roll(image, 1, 1))
+    
     if debug:
         print(f"x: {values_x.shape}\ty: {values_y.shape}")
     values_x[values_x < threshold] = 0
@@ -51,9 +56,8 @@ def brenner_gradient(image: np.ndarray | torch.Tensor, threshold: float=0) -> fl
     if (type(image) == np.ndarray) :
         image: torch.Tensor = torch.from_numpy(image)
 
-    b_x: torch.Tensor = (image[0:H-2, :] - image[2:, :])**2
-    b_y: torch.Tensor = (image[:, 0:W-2] - image[:, 2: ])**2
-    print(f"result_pre_sum: {b_x + b_y}")
+    b_x: torch.Tensor = (image - np.roll(image, 2, 0))**2
+    b_y: torch.Tensor = (image - np.roll(image, 2, 1))**2
     b_x[b_x < threshold] = 0
     b_y[b_y < threshold] = 0
 
@@ -61,6 +65,7 @@ def brenner_gradient(image: np.ndarray | torch.Tensor, threshold: float=0) -> fl
     return result
 
 def tenenbaum_gradient(image: np.ndarray | torch.Tensor) -> float:
+    
     return 0
 
 def sum_of_modified_laplace(image: np.ndarray | torch.Tensor) -> float:
@@ -99,7 +104,7 @@ def entropy_alogrithm(image: np.ndarray | torch.Tensor) -> float:
 
 # Intuitive Algorithms
 
-def thresholded_content(image: np.ndarray | torch.Tensor) -> float:
+def thresholded_content(image: np.ndarray | torch.Tensor, threshold: float=0) -> float:
     return 0
 
 def threholded_pixel_count(image: np.ndarray | torch.Tensor) -> float:
