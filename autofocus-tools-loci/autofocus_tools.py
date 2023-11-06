@@ -4,14 +4,14 @@ Algorithms in this file are derived from Autofocusing Algorithm Selection in Com
 
 import numpy as np
 import torch
+from scipy.ndimage import sobel
 
 # Derivative Based Algorithms
 
 def threshold_absolute_gradient(image: np.ndarray | torch.Tensor, threshold: float=0, debug: bool=False) -> float:
-    """ Returns Brenner Gradient value
+    """ Returns Threshold Absolute Gradient value
     
-    "It sums the absolute value
-of the first derivative that is larger than a threshold θ"
+    "It sums the absolute value of the first derivative that is larger than a threshold θ"
     
     image: a 2D grayscale image with shape (H,W)
     threshold: a value that each gradient must be greater than to be included in the sum
@@ -22,10 +22,6 @@ of the first derivative that is larger than a threshold θ"
 
     if (type(image) == np.ndarray) :
         image: torch.Tensor = torch.from_numpy(image)
-   
-    # thresh = torch.nn.Threshold(threshold=threshold, value=0)
-    # values_x: torch.Tensor = torch.abs(image[0:H-1, :] - image[1:, :])
-    # values_y: torch.Tensor = torch.abs(image[:, 0:W-1] - image[:, 1: ])
     
     values_x: torch.Tensor = torch.abs(image - np.roll(image, 1, 0))
     values_y: torch.Tensor = torch.abs(image - np.roll(image, 1, 1))
@@ -41,8 +37,26 @@ of the first derivative that is larger than a threshold θ"
 
     return result
 
-def squared_gradient(image: np.ndarray | torch.Tensor) -> float:
-    return 0
+def squared_gradient(image: np.ndarray | torch.Tensor, threshold: float=0) -> float:
+    """ Returns Squared Gradient value
+    
+    "This algorithm sums squared differences, making larger gradients exert more influence"
+    
+    image: a 2D grayscale image with shape (H,W)
+    threshold: a value that each gradient must be greater than to be included in the sum
+    """
+    H, W = image.shape
+
+    if (type(image) == np.ndarray) :
+        image: torch.Tensor = torch.from_numpy(image)
+
+    values_x: torch.Tensor = (image - np.roll(image, 1, 0))**2
+    values_y: torch.Tensor = (image - np.roll(image, 1, 1))**2
+    values_x[values_x < threshold] = 0
+    values_y[values_y < threshold] = 0
+
+    result = torch.sum(values_x[:] + values_y[:]).item()
+    return result
 
 def brenner_gradient(image: np.ndarray | torch.Tensor, threshold: float=0) -> float:
     """ Returns Brenner Gradient value
@@ -50,6 +64,7 @@ def brenner_gradient(image: np.ndarray | torch.Tensor, threshold: float=0) -> fl
     "This algorithm computes the first difference between a pixel and its neighbor with a horizontal/vertical distance of 2"
     
     image: a 2D grayscale image with shape (H,W)
+    threshold: a value that each gradient must be greater than to be included in the sum
     """
     H, W = image.shape
 
@@ -65,8 +80,16 @@ def brenner_gradient(image: np.ndarray | torch.Tensor, threshold: float=0) -> fl
     return result
 
 def tenenbaum_gradient(image: np.ndarray | torch.Tensor) -> float:
-    
-    return 0
+    H, W = image.shape
+
+    if (type(image) == torch.Tensor) :
+        image: np.ndarray = image.detach().numpy()
+
+    values_x: np.ndarray = sobel(image, 0)
+    values_y: np.ndarray = sobel(image, 1)
+
+    result = np.sum(values_x[:]**2 + values_y[:]**2).item()
+    return result
 
 def sum_of_modified_laplace(image: np.ndarray | torch.Tensor) -> float:
     return 0
