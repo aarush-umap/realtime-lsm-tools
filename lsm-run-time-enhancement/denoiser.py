@@ -1,5 +1,4 @@
 from logging import warn
-from turtle import forward
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
@@ -16,7 +15,6 @@ from skimage import exposure
 import numpy as np
 from tqdm import tqdm
 import warnings
-from backbones import UNet
 from torch.utils.tensorboard import SummaryWriter
 import datetime
 
@@ -34,12 +32,6 @@ class Denoiser(nn.Module):
             out_channels=config['image-channel'], 
             init_features=config['cnn-base-channel'], 
             pretrained=False)
-        
-        # self.backbone = UNet(
-        #     in_channels=config['image-channel'], 
-        #     out_channels=config['image-channel'], 
-        #     init_features=config['cnn-base-channel'], 
-        #     pretrained=False)
 
         self.configure_dataset(screen_bg)
         self.configure_optimizer()
