@@ -4,7 +4,7 @@ Algorithms in this file are derived from Autofocusing Algorithm Selection in Com
 
 import numpy as np
 import torch
-from scipy.ndimage import sobel
+from scipy.ndimage import sobel, laplace
 
 # Derivative Based Algorithms
 
@@ -80,6 +80,13 @@ def brenner_gradient(image: np.ndarray | torch.Tensor, threshold: float=0) -> fl
     return result
 
 def tenenbaum_gradient(image: np.ndarray | torch.Tensor) -> float:
+    """ Returns Tenenbaum Gradient value
+    
+    "This algorithm convolves an image with Sobel operators, and then sums the square of the gradient vector components"
+    
+    image: a 2D grayscale image with shape (H,W)
+    """
+    
     H, W = image.shape
 
     if (type(image) == torch.Tensor) :
@@ -92,7 +99,15 @@ def tenenbaum_gradient(image: np.ndarray | torch.Tensor) -> float:
     return result
 
 def sum_of_modified_laplace(image: np.ndarray | torch.Tensor) -> float:
-    return 0
+    H, W = image.shape
+
+    if (type(image) == torch.Tensor) :
+        image: np.ndarray = image.detach().numpy()
+
+    values: np.ndarray = np.abs(laplace(image))
+
+    result = np.sum(values).item()
+    return result
 
 def energy_laplace(image: np.ndarray | torch.Tensor) -> float:
     return 0
