@@ -1,5 +1,5 @@
 import torch.nn as nn
-from backbones import UNet, UpScale, Discriminator, weights_init_normal
+from backbones import UNet, Discriminator, weights_init_normal
 from lsm_dataset import prepare_train_valid_loader
 import os
 from glob import glob
@@ -44,6 +44,7 @@ class Enhancer(nn.Module):
                 num_stages=7, 
                 scale_factor=scale_factor)
         else:
+            print(f"scale_factor: {scale_factor} <= 1")
             self.backbone = UNet(
                 in_channels=config['image-channel'], 
                 out_channels=config['cnn-base-channel'], 
