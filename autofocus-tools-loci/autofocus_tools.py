@@ -99,6 +99,12 @@ def tenenbaum_gradient(image: np.ndarray | torch.Tensor) -> float:
     return result
 
 def sum_of_modified_laplace(image: np.ndarray | torch.Tensor) -> float:
+    """ Returns Sum of modified Laplace value
+    
+    "This algorithm sums the absolute values of the convolution of an image with Laplacian operators"
+    
+    image: a 2D grayscale image with shape (H,W)
+    """
     H, W = image.shape
 
     if (type(image) == torch.Tensor) :
