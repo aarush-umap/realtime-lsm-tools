@@ -18,4 +18,5 @@ def compute_sr(image_dir: str = "cropped_sample_data", image_name: str = "PB522-
 
     image = io.imread(path.join(image_dir, image_name))
     output = enhancer.compute(image)
-    io.imsave(path.join("output", image_name), output)
+    # io.imsave(path.join("output", image_name), output)
+    return output
