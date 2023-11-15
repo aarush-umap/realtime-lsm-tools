@@ -55,10 +55,12 @@ def compute_denoise(image_dir: str = "cropped_sample_data", image_name: str = "P
         prediction = model(spotted)
         prediction = torch.mul(prediction, 1-drop_mask)/blindspot_rate
         out_tensor += torch.mean(prediction, 0).squeeze().cpu()/iterations
-    with warnings.catch_warnings():
-        warnings.simplefilter('ignore')
-        out_arr = img_as_uint(np.clip(out_tensor.detach().numpy().squeeze(), 0, 1))
-        img_name = os.path.basename(fname)
-        io.imsave(os.path.join(clean_path, img_name), out_arr)
-        io.imsave(os.path.join(noisy_path, img_name), img_as_uint(img_arr))
+    # with warnings.catch_warnings():
+    #     warnings.simplefilter('ignore')
+    #     out_arr = img_as_uint(np.clip(out_tensor.detach().numpy().squeeze(), 0, 1))
+    #     img_name = os.path.basename(fname)
+    #     io.imsave(os.path.join(clean_path, img_name), out_arr)
+    #     io.imsave(os.path.join(noisy_path, img_name), img_as_uint(img_arr))
+    out_arr = img_as_uint(np.clip(out_tensor.detach().numpy().squeeze(), 0, 1))
+    return out_arr
     print(f'Processed', end='\r')

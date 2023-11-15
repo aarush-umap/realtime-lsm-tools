@@ -3,7 +3,8 @@ Algorithms in this file are derived from Autofocusing Algorithm Selection in Com
 """
 
 import numpy as np
-from scipy.ndimage import sobel, laplace
+import torch
+from scipy.ndimage import sobel, laplace, convolve
 
 # Derivative Based Algorithms
 
@@ -103,7 +104,24 @@ def sum_of_modified_laplace(image: np.ndarray ) -> float:
     return result
 
 def energy_laplace(image: np.ndarray ) -> float:
-    return 0
+    """ Returns Sum of modified Laplace value
+    
+    "This algorithm convolves an image with the mask
+        [[-1 -4 -1],
+         [-4 20 -4],
+          [-1 -4 -1]]
+    to compute the second derivative C(x, y). The final output is the sum of the squares
+    of the convolution results."
+    
+    image: a 2D grayscale image with shape (H,W)
+    """
+    energy_matrix = np.array([[-1,-4,-1],[-4,20,-4],[-1,-4,-1]])
+    H, W = image.shape
+
+    values: np.ndarray = (convolve(image, energy_matrix))**2
+
+    result = np.sum(values).item()
+    return result
 
 def wavelet_alogrithm(image: np.ndarray ) -> float:
     return 0
@@ -133,13 +151,25 @@ def entropy_alogrithm(image: np.ndarray ) -> float:
     return 0
 
 
-# Intuitive Algorithms
+# Intuitive Algorithms TODO: comment and write tests
 
 def thresholded_content(image: np.ndarray , threshold: float=0) -> float:
-    return 0
+    H, W = image.shape
+    
+    image[image < threshold] = 0
+    
+    return np.sum(image).item()
 
-def threholded_pixel_count(image: np.ndarray ) -> float:
-    return 0
+def threholded_pixel_count(image: np.ndarray , threshold: float=0) -> float:
+    H, W = image.shape
+    
+    image[image > threshold] = 0
+    
+    return np.sum(image).item()
 
-def image_power(image: np.ndarray ) -> float:
-    return 0
+def image_power(image: np.ndarray, threshold: float=0) -> float:
+    H, W = image.shape
+    
+    image[image < threshold] = 0
+    
+    return np.sum(image * image).item()
