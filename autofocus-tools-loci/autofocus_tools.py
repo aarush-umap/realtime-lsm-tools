@@ -31,7 +31,7 @@ def threshold_absolute_gradient(image: np.ndarray , threshold: float=0, debug: b
     if debug:
         print(f"x: {values_x.shape}\ty: {values_y.shape}")
 
-    result = sum(values_x[:] + values_y[:])
+    result = np.sum(values_x[:] + values_y[:]).item()
 
     return result
 
@@ -51,7 +51,7 @@ def squared_gradient(image: np.ndarray , threshold: float=0) -> float:
     values_x[values_x < threshold] = 0
     values_y[values_y < threshold] = 0
 
-    result = sum(values_x[:] + values_y[:])
+    result = np.sum(values_x[:] + values_y[:]).item()
     return result
 
 def brenner_gradient(image: np.ndarray , threshold: float=0) -> float:
@@ -70,7 +70,7 @@ def brenner_gradient(image: np.ndarray , threshold: float=0) -> float:
     b_x[b_x < threshold] = 0
     b_y[b_y < threshold] = 0
 
-    result = sum(b_x[:] + b_y[:])
+    result = np.sum(b_x[:] + b_y[:]).item()
     return result
 
 def tenenbaum_gradient(image: np.ndarray ) -> float:
