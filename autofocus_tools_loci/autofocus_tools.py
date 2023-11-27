@@ -118,7 +118,7 @@ def energy_laplace(image: np.ndarray ) -> float:
     energy_matrix = np.array([[-1,-4,-1],[-4,20,-4],[-1,-4,-1]])
     H, W = image.shape
 
-    values: np.ndarray = (convolve(image, energy_matrix))**2
+    values: np.ndarray = (convolve(image, energy_matrix))**2 # type: ignore
 
     result = np.sum(values).item()
     return result
@@ -151,13 +151,26 @@ def autocorrelation(image: np.ndarray ) -> float:
     return result
 
 def standard_deviation_based_correlation(image: np.ndarray ) -> float:
-    return 0
+    # TODO: find a good way to consolidate reused code
+    # TODO: figure out if the mean is per axis, or total image 
+    H, W = image.shape
+    def sd_helper(image, number) -> float:
+        values_x: np.ndarray = (image * np.roll(image, number, 0)) 
+        values_y: np.ndarray = (image * np.roll(image, number, 1))
+        return np.sum(values_x + values_y).item()
+    
+    result = sd_helper(image, 1) - (H * W * (np.mean(image)**2))
+    return result.item()
 
 
 # Histogram Based Algorithms
 
-def range_algorithm(image: np.ndarray ) -> float:
-    return 0
+def range_algorithm(image: np.ndarray, bin_width: int= 10) -> float:
+    hist, bin_edges = np.histogram(image, bin_width)
+    max_val = np.max(hist[hist > 0])
+    min_val = np.min(hist[hist > 0])
+
+    return max_val - min_val
 
 def entropy_alogrithm(image: np.ndarray ) -> float:
     return 0
@@ -172,7 +185,7 @@ def thresholded_content(image: np.ndarray , threshold: float=0) -> float:
     
     return np.sum(image).item()
 
-def threholded_pixel_count(image: np.ndarray , threshold: float=0) -> float:
+def thresholded_pixel_count(image: np.ndarray , threshold: float=0) -> float:
     H, W = image.shape
     
     image[image > threshold] = 0
