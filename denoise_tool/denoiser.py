@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.optim import Adam
-from lsm_dataset import generate_compress_csv, data_loader
+from .lsm_dataset import generate_compress_csv, data_loader
 import os
 import shutil
 import random

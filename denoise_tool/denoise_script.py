@@ -4,8 +4,8 @@ import numpy as np
 import os
 import torch
 
-from denoiser import Denoiser
-from lsm_utils import compute_norm_range
+from .denoiser import Denoiser
+from .lsm_utils import compute_norm_range
 import yaml
 
 import warnings
@@ -17,7 +17,7 @@ torch.cuda.empty_cache()
 
 def compute_denoise(image_dir: str = "cropped_sample_data", image_name: str = "PB522-14-MAX_Fused.tif"):
     vmin, vmax, fail_names = compute_norm_range(image_dir, ext='tif', percentiles=(1, 99.5), sample_r=1)
-    config = yaml.load(open("model_config.yaml", "r"), Loader=yaml.FullLoader)
+    config = yaml.load(open(os.path.join(".", "model_config.yaml"), "r"), Loader=yaml.FullLoader)
     config['dataset'] = image_dir
     config['norm-range'] = [int(vmin), int(vmax)]
     denoiser = Denoiser(config, screen_bg=False)
@@ -26,8 +26,8 @@ def compute_denoise(image_dir: str = "cropped_sample_data", image_name: str = "P
     average_factor = 50
     blindspot_rate = 0.05
     batch_size = 50
-    dataset_name = "cropped_sample_data"
-    fname = os.path.join(dataset_name,"PB522-14-MAX_Fused.tif")
+    dataset_name = image_dir
+    fname = os.path.join(dataset_name,image_name)
     clean_path = os.path.join("output-self", dataset_name, "clean")
     noisy_path = os.path.join("output-self", dataset_name, "noisy")
 

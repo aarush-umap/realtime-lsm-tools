@@ -1,6 +1,6 @@
 import torch.nn as nn
-from backbones import UNet, Discriminator, weights_init_normal
-from lsm_dataset import prepare_train_valid_loader
+from .backbones import UNet, Discriminator, weights_init_normal
+from .lsm_dataset import prepare_train_valid_loader
 import os
 from glob import glob
 import os.path as path
@@ -13,8 +13,8 @@ import numpy as np
 from skimage import io, img_as_uint, exposure
 from skimage.metrics import peak_signal_noise_ratio
 import warnings
-from lsm_utils import screen_background, PerceptualLoss
-from DBPN import dbpn
+from .lsm_utils import screen_background, PerceptualLoss
+from .DBPN import dbpn
 from pytorch_fid.fid_score import calculate_fid_given_paths
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm

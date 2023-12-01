@@ -1,10 +1,10 @@
 from skimage import io
 import numpy as np
 import yaml
-from enhancer import Enhancer
+from .enhancer import Enhancer
 import os.path as path
 import torch
-from lsm_utils import compute_norm_range
+from .lsm_utils import compute_norm_range
 
 
 def compute_sr(image_dir: str = "cropped_sample_data", image_name: str = "PB522-14-MAX_Fused.tif"):
