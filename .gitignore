@@ -12,4 +12,4 @@ print*/
 model-weights/self-*
 runs/
 .vscode
-.csv
+*.csv
