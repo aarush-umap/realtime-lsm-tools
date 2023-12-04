@@ -17,7 +17,8 @@ torch.cuda.empty_cache()
 
 def compute_denoise(image_dir: str = "cropped_sample_data", image_name: str = "PB522-14-MAX_Fused.tif"):
     vmin, vmax, fail_names = compute_norm_range(image_dir, ext='tif', percentiles=(1, 99.5), sample_r=1)
-    config = yaml.load(open(os.path.join(".", "model_config.yaml"), "r"), Loader=yaml.FullLoader)
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    config = yaml.load(open(os.path.join(dir_path, "model_config.yaml"), "r"), Loader=yaml.FullLoader)
     config['dataset'] = image_dir
     config['norm-range'] = [int(vmin), int(vmax)]
     denoiser = Denoiser(config, screen_bg=False)
