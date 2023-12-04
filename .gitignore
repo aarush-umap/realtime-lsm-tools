@@ -13,3 +13,4 @@ model-weights/self-*
 runs/
 .vscode
 *.csv
+test_data\Zstack_HistopathologySlide_CAMM_1_MMStack_Pos0.ome.tif
