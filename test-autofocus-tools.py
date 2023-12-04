@@ -39,7 +39,7 @@ example_array = np.array([[1,2,3],[4,5,6],[7,8,9]])
 acceptable = [i for i in range(21,27)]
 print(acceptable)
 test_image = io.imread(r'test_data\Zstack_HistopathologySlide_CAMM_1_MMStack_Pos0.ome.tif')
-print(test_image.shape)
+test_image = test_image[:,:,:,0]*.3 + test_image[:,:,:,1]*.59 + test_image[:,:,:,2]*.11 
 # test_threshold_absolute_gradient(example_array)
 # test_brenner_gradient(example_array)
 # test_squared_gradient(example_array)
