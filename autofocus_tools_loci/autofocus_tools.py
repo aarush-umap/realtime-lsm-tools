@@ -132,13 +132,13 @@ def wavelet_alogrithm(image: np.ndarray ) -> float:
 def defocused_variance(image: np.ndarray ) -> float:
     H, W = image.shape
     mean = np.mean(image)
-    result = (1/(H*W)) * np.sum(image - mean)
+    result = (1/(H*W)) * np.sum((image - mean)**2)
     return result.astype(float)
 
 def normalized_variance(image: np.ndarray ) -> float:
     H, W = image.shape
     mean = np.mean(image)
-    result = (1/(H*W*mean)) * np.sum(image - mean)
+    result = (1/(H*W*mean)) * np.sum((image - mean)**2)
     return result.astype(float)
 
 def autocorrelation(image: np.ndarray ) -> float: 
