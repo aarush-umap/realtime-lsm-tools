@@ -26,8 +26,11 @@ def threshold_absolute_gradient(image: np.ndarray , threshold: float=0, debug: b
     
     if debug:
         print(f"x: {values_x.shape}\ty: {values_y.shape}")
-    values_x[values_x < threshold] = 0
-    values_y[values_y < threshold] = 0
+    # values_x[values_x < threshold] = 0
+    # values_y[values_y < threshold] = 0
+
+    values_x = np.where(values_x < threshold, 0, values_x)
+    values_y = np.where(values_y < threshold, 0, values_y)
     if debug:
         print(f"x: {values_x.shape}\ty: {values_y.shape}")
 
@@ -48,8 +51,11 @@ def squared_gradient(image: np.ndarray , threshold: float=0) -> float:
 
     values_x: np.ndarray = (image - np.roll(image, 1, 0))**2
     values_y: np.ndarray = (image - np.roll(image, 1, 1))**2
-    values_x[values_x < threshold] = 0
-    values_y[values_y < threshold] = 0
+    # values_x[values_x < threshold] = 0
+    # values_y[values_y < threshold] = 0
+
+    values_x = np.where(values_x < threshold, 0, values_x)
+    values_y = np.where(values_y < threshold, 0, values_y)
 
     result = np.sum(values_x[:] + values_y[:]).item()
     return result
@@ -67,8 +73,10 @@ def brenner_gradient(image: np.ndarray , threshold: float=0) -> float:
 
     b_x: np.ndarray = (image - np.roll(image, 2, 0))**2
     b_y: np.ndarray = (image - np.roll(image, 2, 1))**2
-    b_x[b_x < threshold] = 0
-    b_y[b_y < threshold] = 0
+    # b_x[b_x < threshold] = 0
+    # b_y[b_y < threshold] = 0
+    b_x = np.where(b_x < threshold, 0, b_x)
+    b_y = np.where(b_y < threshold, 0, b_y)
 
     result = np.sum(b_x[:] + b_y[:]).item()
     return result
@@ -181,20 +189,23 @@ def entropy_alogrithm(image: np.ndarray ) -> float:
 def thresholded_content(image: np.ndarray , threshold: float=0) -> float:
     H, W = image.shape
     
-    image[image < threshold] = 0
+    # image[image < threshold] = 0
+    image = np.where(image < threshold, 0, image)
     
     return np.sum(image).item()
 
 def thresholded_pixel_count(image: np.ndarray , threshold: float=0) -> float:
     H, W = image.shape
     
-    image[image > threshold] = 0
+    # image[image > threshold] = 0
+    image = np.where(image > threshold, 0, image)
     
     return np.sum(image).item()
 
 def image_power(image: np.ndarray, threshold: float=0) -> float:
     H, W = image.shape
     
-    image[image < threshold] = 0
+    # image[image < threshold] = 0
+    image = np.where(image < threshold, 0, image)
     
     return np.sum(image * image).item()
